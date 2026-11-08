@@ -1,17 +1,13 @@
 
 "use client";
+import { FaGithub } from "react-icons/fa";
 
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import {
-  HeartHandshake,
-  Mail,
-  LockKeyhole,
-} from "lucide-react";
-
-import { SiGithub } from "@icons-pack/react-simple-icons";
+import { Github, Mail, LockKeyhole } from "lucide-react";
+import { Button } from "@base-ui/react";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -21,143 +17,127 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  // Email and password login
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
     try {
-      const result = await authClient.signIn.email({
+      const { error } = await authClient.signIn.email({
         email,
         password,
       });
 
-      if (result.error) {
-        setError(result.error.message || "Login failed");
+      if (error) {
+        setError(error.message || "Login failed");
         return;
       }
 
       router.push("/");
       router.refresh();
     } catch {
-      setError("Something went wrong. Please try again.");
+      setError("Something went wrong!");
     } finally {
       setLoading(false);
     }
   };
 
+  // GitHub login
   const handleGithubLogin = async () => {
+    setError("");
+
     try {
       await authClient.signIn.social({
         provider: "github",
         callbackURL: "/",
       });
     } catch {
-      setError("GitHub login failed. Please try again.");
+      setError("GitHub login failed!");
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-sm border border-gray-100 p-7 sm:p-9">
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-10">
+      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
 
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="w-14 h-14 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-            <HeartHandshake size={30} />
-          </div>
-
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+        <div className="text-center mb-7">
+          <h1 className="text-3xl font-bold text-gray-900">
             Welcome Back!
           </h1>
-
-          <p className="text-gray-500 text-sm mt-2">
-            Login to join our community and make a difference.
+          <p className="mt-2 text-sm text-gray-500">
+            Login to your account
           </p>
         </div>
 
-        {/* Login Form */}
         <form onSubmit={handleLogin} className="space-y-5">
 
-          {/* Email */}
           <div>
-            <label className="block text-sm font-medium text-gray-800 mb-2">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               Email
             </label>
-
-            <div className="relative">
-              <Mail
-                size={18}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              />
-
+            <div className="flex items-center rounded-lg border border-gray-300 px-3">
+              <Mail size={18} className="text-gray-400" />
               <input
                 type="email"
                 placeholder="Enter your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="w-full p-3 outline-none text-gray-800"
                 required
-                className="w-full h-11 pl-10 pr-4 border border-gray-300 rounded-lg outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 text-sm"
               />
             </div>
           </div>
 
-          {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-800 mb-2">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               Password
             </label>
-
-            <div className="relative">
-              <LockKeyhole
-                size={18}
-                className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              />
-
+            <div className="flex items-center rounded-lg border border-gray-300 px-3">
+              <LockKeyhole size={18} className="text-gray-400" />
               <input
                 type="password"
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="w-full p-3 outline-none text-gray-800"
                 required
-                className="w-full h-11 pl-10 pr-4 border border-gray-300 rounded-lg outline-none focus:border-green-600 focus:ring-1 focus:ring-green-600 text-sm"
               />
             </div>
           </div>
 
-          {/* Error */}
           {error && (
             <p className="text-sm text-red-500">{error}</p>
           )}
 
-          {/* Login Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full h-11 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors disabled:opacity-60"
+            className="w-full rounded-lg bg-green-600 py-3 font-semibold text-white hover:bg-green-700 disabled:opacity-50"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
         </form>
 
-        {/* GitHub Login Button */}
-        <button
-          type="button"
-          onClick={handleGithubLogin}
-          className="w-full mt-4 flex items-center justify-center gap-3 rounded-xl border border-gray-300 bg-white px-5 py-3.5 text-sm font-semibold text-gray-800 shadow-sm transition-all duration-200 hover:bg-gray-900 hover:text-white hover:border-gray-900 hover:shadow-lg active:scale-[0.98]"
-        >
-          <Github size={21} />
-          Continue with GitHub
-        </button>
+        <div className="my-5 flex items-center gap-3">
+          <div className="h-px flex-1 bg-gray-200" />
+          <span className="text-sm text-gray-400">OR</span>
+          <div className="h-px flex-1 bg-gray-200" />
+        </div>
 
-        {/* Register Link */}
-        <p className="text-center text-sm text-gray-500 mt-6">
+     <Button
+  onClick={handleGithubLogin}
+  className="flex w-full items-center justify-center gap-3 rounded-lg border border-gray-300 py-3 font-semibold text-gray-800 hover:bg-gray-100"
+>
+  <FaGithub size={22} />
+  Continue with GitHub
+</Button>
+
+        <p className="mt-7 text-center text-sm text-gray-500">
           Don't have an account?{" "}
           <Link
             href="/register"
-            className="text-green-600 font-semibold hover:text-green-700"
+            className="font-semibold text-green-600 hover:underline"
           >
             Register
           </Link>
