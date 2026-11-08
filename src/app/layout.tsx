@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "sonner";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/componentss/Navbar";
@@ -28,6 +29,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col">
         
         <Navbar/>
+       <Toaster
+  position="top-right"
+  richColors
+  closeButton
+  duration={3000}
+/>
+
         {children}
         <Footer/>
         </body>

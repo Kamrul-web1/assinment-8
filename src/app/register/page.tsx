@@ -1,29 +1,29 @@
-
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { UserPlus } from "lucide-react";
+import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 
 export default function RegisterPage() {
+  const router = useRouter();
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [image, setImage] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const handleRegister = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
     if (!passwordRegex.test(password)) {
-      setError(
+      toast.error(
         "Password must be at least 8 characters with uppercase and lowercase letters."
       );
       setLoading(false);
@@ -39,13 +39,21 @@ export default function RegisterPage() {
       });
 
       if (error) {
-        setError(error.message || "Registration failed");
+        toast.error(error.message || "Registration failed!");
         return;
       }
 
-      window.location.href = "/";
+      toast.success("Registration Successful!", {
+        description: "Welcome to EventSphere!",
+      });
+
+      router.push("/");
+      router.refresh();
+
     } catch {
-      setError("Something went wrong!");
+      toast.error("Something went wrong!", {
+        description: "Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -54,6 +62,13 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
+
+        {/* Register Icon */}
+        <div className="flex justify-center mb-4">
+          <div className="bg-green-100 p-4 rounded-full">
+            <UserPlus size={32} className="text-green-600" />
+          </div>
+        </div>
 
         <h1 className="text-3xl font-bold text-center text-gray-900">
           Create Account
@@ -65,6 +80,7 @@ export default function RegisterPage() {
 
         <form onSubmit={handleRegister} className="mt-8 space-y-5">
 
+          {/* Full Name */}
           <div>
             <label className="block text-sm font-medium mb-2 text-gray-700">
               Full Name
@@ -79,6 +95,7 @@ export default function RegisterPage() {
             />
           </div>
 
+          {/* Email */}
           <div>
             <label className="block text-sm font-medium mb-2 text-gray-700">
               Email
@@ -108,6 +125,7 @@ export default function RegisterPage() {
             />
           </div>
 
+          {/* Password */}
           <div>
             <label className="block text-sm font-medium mb-2 text-gray-700">
               Password
@@ -128,14 +146,11 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {error && (
-            <p className="text-sm text-red-500">{error}</p>
-          )}
-
+          {/* Register Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-lg bg-green-600 py-3 font-semibold text-white hover:bg-green-700 disabled:opacity-50"
+            className="w-full rounded-lg bg-green-600 py-3 font-semibold text-white hover:bg-green-700 disabled:opacity-50 transition-colors"
           >
             {loading ? "Creating Account..." : "Register"}
           </button>

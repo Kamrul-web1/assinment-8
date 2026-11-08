@@ -2,11 +2,12 @@
 "use client";
 import { FaGithub } from "react-icons/fa";
 
+import { toast } from "sonner";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
-import { Github, Mail, LockKeyhole } from "lucide-react";
+import {  Mail, LockKeyhole, LogIn } from "lucide-react";
 import { Button } from "@base-ui/react";
 
 export default function LoginPage() {
@@ -33,11 +34,13 @@ export default function LoginPage() {
         setError(error.message || "Login failed");
         return;
       }
+toast.success("Successfully Logged In!");
 
       router.push("/");
       router.refresh();
     } catch {
-      setError("Something went wrong!");
+       toast.error("Something went wrong!");
+
     } finally {
       setLoading(false);
     }
@@ -53,18 +56,22 @@ export default function LoginPage() {
         callbackURL: "/",
       });
     } catch {
-      setError("GitHub login failed!");
+        toast.error("GitHub login failed!");
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4 py-10">
       <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-xl">
-
-        <div className="text-center mb-7">
-          <h1 className="text-3xl font-bold text-gray-900">
-            Welcome Back!
-          </h1>
+<div className="flex justify-center mb-4">
+  <div className="bg-green-100 p-3 rounded-full">
+    <LogIn size={28} className="text-green-600" />
+  </div>
+</div>
+      <div className="text-center mb-7">
+  <h1 className="text-3xl font-bold text-gray-900">
+    Welcome Back!
+  </h1>
           <p className="mt-2 text-sm text-gray-500">
             Login to your account
           </p>
