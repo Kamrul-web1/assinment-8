@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import EditEvent from "@/componentss/EditEvents";
+import DeletEvents from "@/componentss/DeletEvents";
 
 interface EventItem {
   _id: string;
@@ -254,14 +255,19 @@ export default function ManageEventsPage() {
     );
   }}
 />
-                    <button
-                      type="button"
-                      disabled
-                      className="flex items-center justify-center gap-1 rounded-lg bg-red-50 px-2 py-2.5 text-xs font-semibold text-red-600 opacity-70"
-                    >
-                      <Trash2 size={15} />
-                      Delete
-                    </button>
+                  
+
+                    
+                   <DeletEvents
+  eventId={event._id}
+  onDelete={(id) => {
+    setEvents((prev) =>
+      prev.filter((item) => item._id !== id)
+    );
+  }}
+/>
+
+
                   </div>
                 </div>
               </div>
