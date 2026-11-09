@@ -12,9 +12,11 @@ import {
   Loader2,
   X,
 } from "lucide-react";
+
 import { toast } from "sonner";
 import EditEvent from "@/componentss/EditEvents";
 import DeletEvents from "@/componentss/DeletEvents";
+import Link from "next/link";
 
 interface EventItem {
   _id: string;
@@ -235,14 +237,13 @@ export default function ManageEventsPage() {
 
                   {/* Action Buttons */}
                   <div className="mt-5 grid grid-cols-3 gap-2 border-t border-gray-100 pt-4">
-                    <button
-                      type="button"
-                      disabled
-                      className="flex items-center justify-center gap-1 rounded-lg bg-green-50 px-2 py-2.5 text-xs font-semibold text-green-700 opacity-70"
-                    >
-                      <Eye size={15} />
-                      View
-                    </button>
+   <Link
+  href={`/manage-events/${event._id}`}
+  className="flex items-center justify-center gap-1 rounded-lg bg-green-50 px-2 py-2.5 text-xs font-semibold text-green-700 hover:bg-green-100"
+>
+  <Eye size={15} />
+  View
+</Link>
 
                
 <EditEvent
