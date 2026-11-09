@@ -1,7 +1,9 @@
 
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export default function CreateEventPage() {
   const [formData, setFormData] = useState({
@@ -43,7 +45,7 @@ export default function CreateEventPage() {
       
 
       if (res.ok) {
-        alert("Event created successfully!");
+        toast.success("Event created successfully!");
 
         setFormData({
           title: "",
@@ -55,7 +57,7 @@ export default function CreateEventPage() {
           organizer: "",
         });
       } else {
-        alert(data.message || "Failed to create event");
+        toast.error(data.message || "Failed to create event");
       }
     } catch (error) {
       console.error(error);
@@ -281,7 +283,7 @@ uuuu
 
               {/* Submit */}
               <div className="border-t border-gray-100 pt-6">
-                <button
+                <Link href={'/manage-events'}
                   type="submit"
                   disabled={loading}
                   className="flex w-full items-center justify-center gap-2 rounded-xl bg-green-700 px-6 py-4 text-sm font-bold text-white shadow-lg shadow-green-700/20 transition hover:bg-green-800 disabled:cursor-not-allowed disabled:opacity-60"
@@ -289,7 +291,7 @@ uuuu
                   {loading ? "Creating Event..." : "Create Event"}
 
                   {!loading && <span className="text-lg">→</span>}
-                </button>
+                </Link>
 
                 <p className="mt-3 text-center text-xs text-gray-400">
                   Let's work together to make our community better.

@@ -1,5 +1,5 @@
 "use client";
-
+import { toast } from "sonner";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -25,6 +25,7 @@ const Navbar = () => {
   const handleLogout = async () => {
     await authClient.signOut();
     setOpen(false);
+    toast.success('Logout successfull')
     router.push("/login");
     router.refresh();
   };
